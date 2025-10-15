@@ -21,7 +21,7 @@ public class CrudSpringApplication {
 			courseRepository.deleteAll();
 			Course c = new Course();
 			c.setName("Spring Boot");
-			c.setCategory("backend");
+			c.setCategory("Back-end");
 			courseRepository.save(c);
 		};
 	}
