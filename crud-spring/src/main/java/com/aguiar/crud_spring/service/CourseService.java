@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 
+import com.aguiar.crud_spring.exception.RecordNotFoundException;
 import com.aguiar.crud_spring.model.Course;
 import com.aguiar.crud_spring.repository.CourseRepository;
 
@@ -30,31 +31,26 @@ public class CourseService {
     return courseRepository.findAll();
   }
 
-  public Optional<Course> findById(@PathVariable @NotNull @Positive Long id) {
-    return courseRepository.findById(id);
+  public Course findById(@PathVariable @NotNull @Positive Long id) {
+    return courseRepository.findById(id).orElseThrow(() -> new RecordNotFoundException(id));
   }
 
   public Course create(@Valid Course course) {
     return courseRepository.save(course);
   }
 
-  public Optional<Course> update(@PathVariable @NotNull @Positive Long id, @RequestBody @Valid Course course) {
+  public Course update(@PathVariable @NotNull @Positive Long id, @RequestBody @Valid Course course) {
     return courseRepository.findById(id)
         .map(record -> {
           record.setName(course.getName());
           record.setCategory(course.getCategory());
           Course updated = this.courseRepository.save(record);
           return updated;
-        });
+        }).orElseThrow(() -> new RecordNotFoundException(id));
   }
 
-  public boolean delete(@PathVariable @NotNull @Positive Long id) {
-    return courseRepository.findById(id)
-        .map(record -> {
-          courseRepository.deleteById(id);
-          return true;
-        })
-        .orElse(false);
+  public void delete(@PathVariable @NotNull @Positive Long id) {
+    courseRepository.delete(courseRepository.findById(id).orElseThrow(() -> new RecordNotFoundException(id)));
   }
 
 }
