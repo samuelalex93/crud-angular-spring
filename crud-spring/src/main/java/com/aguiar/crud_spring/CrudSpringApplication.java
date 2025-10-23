@@ -7,6 +7,7 @@ import org.springframework.context.annotation.Bean;
 
 import com.aguiar.crud_spring.enums.Category;
 import com.aguiar.crud_spring.model.Course;
+import com.aguiar.crud_spring.model.Lesson;
 import com.aguiar.crud_spring.repository.CourseRepository;
 
 @SpringBootApplication
@@ -23,6 +24,11 @@ public class CrudSpringApplication {
 			Course c = new Course();
 			c.setName("Spring Boot");
 			c.setCategory(Category.BACK_END);
+			Lesson l = new Lesson();
+			l.setName("Intro");
+			l.setYoutubeUrl("m/5465sdfsf");
+			l.setCourse(c);
+			c.getLessons().add(l);
 			courseRepository.save(c);
 		};
 	}
